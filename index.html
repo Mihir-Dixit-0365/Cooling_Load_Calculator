@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cooling Load Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: lightblue; /* New - set the background color to light blue */
+        }
+        h2 {
+            text-align: center; /* New - center align headings */
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="number"], select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        input[type="submit"] {
+            background-color: lightcoral; /* New - set the button color to light red */
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            float: right;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h2>Cooling Load Calculator</h2>
+    <form id="coolingLoadForm">
+        <label for="area">Area of the building (in square meters):</label>
+        <input type="number" id="area" required>
+        
+        <label for="occupants">Number of occupants in the building:</label>
+        <input type="number" id="occupants" required>
+        
+        <label for="building_type">Type of building:</label>
+        <select id="building_type" required>
+            <option value="residential">Residential</option>
+            <option value="commercial">Commercial</option>
+        </select>
+        
+        <label for="T_outdoor">Outdoor temperature (in Celsius):</label>
+        <input type="number" id="T_outdoor" required>
+        
+        <label for="T_indoor">Indoor desired temperature (in Celsius):</label>
+        <input type="number" id="T_indoor" required>
+        
+        <input type="submit" value="Calculate">
+    </form>
+    <div class="result" id="result"></div>
+
+    <script>
+        document.getElementById("coolingLoadForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            calculateCoolingLoad();
+        });
+
+        function calculateCoolingLoad() {
+            var area = parseFloat(document.getElementById("area").value);
+            var occupants = parseInt(document.getElementById("occupants").value);
+            var building_type = document.getElementById("building_type").value;
+            var T_outdoor = parseFloat(document.getElementById("T_outdoor").value);
+            var T_indoor = parseFloat(document.getElementById("T_indoor").value);
+
+            var U = 30;
+
+            var cooling_load;
+            if (building_type === "residential") {
+                cooling_load = 100 * occupants;
+            } else if (building_type === "commercial") {
+                cooling_load = 150 * occupants;
+            } else {
+                document.getElementById("result").innerHTML = "Invalid building type. Please select either 'residential' or 'commercial'.";
+                return;
+            }
+
+            var Q_conduction = U * area * (T_outdoor - T_indoor);
+            var sensible_cooling_load = Q_conduction + cooling_load;
+
+            document.getElementById("result").innerHTML = "The sensible cooling load is " + sensible_cooling_load + " units.";
+        }
+    </script>
+</body>
+</html>
